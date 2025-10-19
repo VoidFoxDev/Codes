@@ -35,4 +35,12 @@ def game():
         button = input("")
         if button == "links":
             print("ein lautes geräusch ertönnt, auf dem Bildschirm siehst du wie eine Konstruktion dinem schulkameraden ein Loch ins bein sägt, seine schreie sind über die übersteuerten boxen des Fernsehr nicht zu überhören....es wird kurz still.\nder bildschirm ist kurz dunkel und geht nach einigen sekunden wieder an\ndein klassenkamerad guckt in die kamera mit müden roten augen und sagt langsam deinen namen...Er weiss das du es warst")
+        elif button == "rechts":
+            print("Am Fernseher selbst öffnet sich ein kleines geheimfach. Das Loch ist gerade groß genug, dass deine Hand rein passt. Du kannst nicht sehen was sich drin befindet. Möchtest du rein greifen?")
+            choice = input("ja oder nein?")
+            if choice == "ja":
+                print("Du greifst vorsichtig in das Loch, es ist kalt und nass, es fühlt sich alienhaft an. Du spürst einen harten gegenstand. Mit etwas kraft ziehst du ihn aus dem Loch. Der Fernseher erlischt.")    
+            if choice == "nein":
+                print("Du schaust das Loch ängstlich an, greifst nicht rein und beobachtest weiter deinen Schulkameraden im Fernseher...")
+            print("Du hörst laute schreie und springts auf. ")
 game()
