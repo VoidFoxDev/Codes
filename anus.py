@@ -8,6 +8,7 @@ import select
 stop_typing = False
 tvLeftButtonPressed = False
 tookAlienItem = False
+killedGirl = False
 
 gameover = 0
 
@@ -121,13 +122,15 @@ def game():
                 break
             else:
                 print("Bitte nochmal eingeben!")
+
 def flur():
+    global killedGirl
     nPrint("Du gehst durch die schwere Eisentür durch einen Korridor, irgendwas ist komisch. Es gibt keine Türen.\nDie Tür hinter dir schließt sich mit einem lauten knall.")
     nPrint("Als du dich wieder umdrehst, ist eine andere Tür erschienen, die sich langsam öffnet.\nIm nächsten Raum befindet sich ein kleines Mädchen mit einem Sack über dem Kopf. Es sind leichte Wunden und Schwellungen am ganzen Körper zu sehen. Sie ist am Boden mit einer Eisenkette gefässelt.")
     nPrint("Du hörst das bitterliche Schluchzen des Mädchens. Als sie dich bemerkt wie du ihr näher kommst, fängt sie an zu zittern.")
     nPrint("'BITTE BITTE tu mir nichts..' weint das Mädchen.")
     nPrint("Neben ihr liegt ein stumpfes Messer und ein Zettel wo drauf steht:")
-    nPrint("'Das Mädchen, was du vor dir siehst, mobbt ihre Mitschüler in der Grundschule und klaut ihnen Geld und essen. Aber das ist doch normal für Kinder in ihrem alter oder... ?\nVerschohnst du das Mädchen, werden die Kinder, welche sie beklaut hat, sterben.\nTötest du sie, bleiben die anderen am leben.\nWie entscheidest du dich?'")
+    nPrint("'Das Mädchen, was du vor dir siehst, mobbt ihre Mitschüler in der Grundschule und klaut ihnen Geld und essen. Aber das ist doch normal für Kinder in ihrem Alter oder... ?\nVerschohnst du das Mädchen, werden die Kinder, welche sie beklaut hat, sterben.\nTötest du sie, bleiben die anderen am leben.\nWie entscheidest du dich?'")
     while True:
         choice = input("'Töten' oder 'in ruhe lassen'? ").lower()
         if choice == "in ruhe lassen":
@@ -138,6 +141,7 @@ def flur():
             nPrint("Du nimmst das Messer.\nDeine Hand fängt an zu schwitzen und du schaust dir das Mädchen an...\nDu fängst an deine Hand zu heben und mit deiner ganzen Kraft rammst du das Messer in die Brust des Mädchens.\n Sie schreit und fleht dich an damit aufzuhören aber dein einziger gedanke ist, dass du hier nur raus willst. Du versuchst das Messer aus ihr raus zu ziehen aber es steckt fest zwischen ihren Rippen. Das rostige stumpfe Messer geht nur mit Gewalt raus.")
             nPrint("Du hast das Herz des Mädchens leicht verfehlt wodurch sie nicht direkt stirbt. Sie weint bitterlich vor Schmerzen. Du musst es nochmal in sie reinrammen\nDeine gedanken spielen verrückt, dir kommen die Tränen und du fängst fast das kotzen an. Dieses mal rammst du es direkt in ihre Halsschlagader. Mit ganz viel Druck hast du es geschafft ihr durch den Hals zu schneiden...")
             nPrint("Sie ist tot...")
+            killedGirl = True
             break
         else:
             nPrint("Bitte Wählen: 'Töten' oder 'in ruhe lassen'.")
