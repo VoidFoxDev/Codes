@@ -1,9 +1,6 @@
 import sys
 import time
 import threading
-import termios
-import tty
-import select
 
 stop_typing = False
 tvLeftButtonPressed = False
@@ -229,30 +226,41 @@ J`---. |
 """)
 
 def key_listener():
-    """Runs in a separate thread and sets stop_typing to True when space or enter is pressed."""
+    """Waits for Space or Enter in a platform-compatible way."""
     global stop_typing
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setcbreak(fd)
+
+    if sys.platform.startswith("win"):
+        import msvcrt
         while True:
-            dr, _, _ = select.select([sys.stdin], [], [], 0)
-            if dr:
-                ch = sys.stdin.read(1)
-                if ch in [' ', '\n']:
+            if msvcrt.kbhit():
+                key = msvcrt.getch()
+                if key in [b' ', b'\r']:  # Space or Enter
                     stop_typing = True
                     break
             time.sleep(0.05)
-    finally:
-        # Always restore normal terminal mode
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    else:
+        import termios, tty, select
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setcbreak(fd)
+            while True:
+                dr, _, _ = select.select([sys.stdin], [], [], 0)
+                if dr:
+                    ch = sys.stdin.read(1)
+                    if ch in [' ', '\n']:
+                        stop_typing = True
+                        break
+                time.sleep(0.05)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
 
 def smart_print(text, delay=0.05, start_delay=0):
-    """Prints text gradually; space or enter skips animation."""
+    """Prints text gradually; pressing space or enter skips animation."""
     global stop_typing
     stop_typing = False
 
-    # Start key listener
     listener = threading.Thread(target=key_listener, daemon=True)
     listener.start()
 
@@ -267,15 +275,16 @@ def smart_print(text, delay=0.05, start_delay=0):
         time.sleep(delay)
     print("")
 
-    # Wait briefly so the listener can exit and restore terminal state
+    # Small pause so listener thread can exit cleanly
     time.sleep(0.05)
+
 
 def sPrint(text):
     smart_print(text, delay=0.1, start_delay=1)
 
+
 def nPrint(text):
     smart_print(text, delay=0.1, start_delay=0)
-
 game()
 if not gameover:
     flur()
