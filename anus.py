@@ -1,7 +1,9 @@
 import sys
-from time import sleep
-import keyboard
+import time
 import threading
+import termios
+import tty
+import select
 
 stop_typing = False
 gameover = 0
@@ -9,263 +11,261 @@ gameover = 0
 def game():
     global gameover
     leben = 100
-    print("Wie Heißen sie?")
-    name = input("Name; ")
-    print("Hallo, " + name + " Du hast " + str(leben) + " leben")
+    nPrint("Wie Heißen sie?")
+    name = input("Name: ")
+    nPrint("Hallo, " + name + "\n(Du hast " + str(leben) + " Leben! Sei Vorsichtig!)")
     while True: 
-        print("Möchtest du nach links oder rechts gehen?")
+        nPrint("Möchtest du nach links oder rechts gehen?")
         direction = input("")
         if direction == "links":
-            print(name + " du bist in einer Grube voller AIDS Nadeln gefallen , du stirbst an einem langsamen quallvollen, schreckllichen Tod, eine Nadel STößt direkt in dein Linkes Auge, und du siehst dein blut die Nadel runtertropfen. ENDE")
+            nPrint(name + "Du bist in eine Grube voller AIDS Nadeln gefallen, du stirbst an einem langsamen quallvollen und schreckllichen Tod als eine Nadel direkt in dein Linkes Auge sticht. Du siehst wie dein Blut die Nadel runtertropft und wirst ohnmächtig.\nENDE")
             gameover = 1
             return
         
         elif direction == "rechts":
-            print("Du siehst ein Loch in der wand , perfekt für diene hand , du greift rein und merkst wie deine hand von rassierklingen geschnittenwerden . du ahst einnen schlüssel erhalten aber deine hand ist komplett zerfetzt.")
+            nPrint("Du siehst ein Loch in der Wand, perfekt für deine Hand, du greift rein und merkst wie deine Hand von Rassierklingen geschnitten wird. Du hast einen Schlüssel erhalten aber deine Hand ist komplett zerfetzt.")
             leben -= 10
-            print("Leben = " + str(leben))
+            nPrint("(Leben = " + str(leben)+ ")")
             break
         else:
-            print("no correct input")
-    print("Der schlüssel passt in einer kleine tür rein wo du dich gerade so durchquetschen kannst , auf der anderen seite befindet sich einh Fernseher , willst du ihn anschalten ?")
+            nPrint("no correct input")
+    nPrint("Der Schlüssel passt in eine kleine Tür rein wo du dich gerade so durchquetschen kannst. Auf der anderen seite befindet sich ein Fernseher, willst du ihn einschalten?")
     while True:
-        choice = input("ja oder nein ?")
+        choice = input("\nJa oder Nein?\n").lower()
         if choice == "ja":
-            print("Der Fernsehr zeigt eine dir bekannt aussehnde Person , aber du erkennst sie nicht richtig , du weist das du sie schonmal irgendwo gesehen hast...aber wo... . Bei genauem hinsehen erkennst du das es ein Schulfreund aus alten Tagen ist.  ")
+            nPrint("Der Fernsehr zeigt dir eine bekannt aussehende Person, aber du erkennst sie nicht richtig. Du weißt das du sie schonmal irgendwo gesehen hast...aber wo...")
+            nPrint("Bei genauem hinsehen erkennst du, dass es ein Schulfreund aus alten Tagen ist.")
             break
         elif choice == "nein":
-            print("Die tür hinter dir knallt zu, du stehst in dem leeren raum, es ist still, sher still, die kalten bleichen wände scheinen trüb und das tropfen der abwasserrohre werden immer lauter. Du siehst dir den Fernsehr an aber schaltest ihn nicht an und wartest...gefangen in isolation..allein..")
+            nPrint("Die Tür hinter dir knallt zu, du stehst in dem leeren Raum, es ist still, sehr still, die kalten bleichen Wände scheinen trüb und das tropfen der Abwasserrohre wird immer lauter. Du siehst dir den Fernseher an aber schaltest ihn nicht an und wartest...gefangen in isolation..allein..")
             break
     if choice == "ja":
-        print("Er scheint gefäässlt zu sein. Neben dem Fernsehr ist sind 2 Knöpfe die man betätigen kann, welchen möchtest du drücken , links oder rechts ?")
-        button = input("")
+        nPrint("Er scheint gefässelt zu sein. Neben dem Fernseher sind 2 Knöpfe die man betätigen kann.")
+        nPrint("Welchen möchtest du drücken?")
+        button = input("links oder rechts?").lower()
         if button == "links":
-            print("ein lautes geräusch ertönnt, auf dem Bildschirm siehst du wie eine Konstruktion dinem schulkameraden ein Loch ins bein sägt, seine schreie sind über die übersteuerten boxen des Fernsehr nicht zu überhören....es wird kurz still.\nder bildschirm ist kurz dunkel und geht nach einigen sekunden wieder an\ndein klassenkamerad guckt in die kamera mit müden roten augen und sagt langsam deinen namen...Er weiss das du es warst")
+            nPrint("Ein lautes Geräusch ertönnt, auf dem Bildschirm siehst du wie eine Konstruktion deinem Schulkameraden ein Loch ins Bein sägt, seine Schreie sind über die übersteuerten Boxen des Fernseher nicht zu überhören....es wird kurz still.\nDer Bildschirm ist kurz dunkel und geht nach einigen Sekunden wieder an.\nDein Klassenkamerad guckt in die Kamera mit müden roten Augen und sagt langsam deinen Namen...Er weiß das du es warst.")
         elif button == "rechts":
-            print("Am Fernseher selbst öffnet sich ein kleines geheimfach. Das Loch ist gerade groß genug, dass deine Hand rein passt. Du kannst nicht sehen was sich drin befindet. Möchtest du rein greifen?")
-            choice = input("ja oder nein?")
+            nPrint("Am Fernseher selbst öffnet sich ein kleines Geheimfach. Das Loch ist gerade groß genug, dass deine Hand rein passt. Du kannst nicht sehen was sich drin befindet. Möchtest du rein greifen?")
+            choice = input("Ja oder Nein?").lower()
             if choice == "ja":
-                print("Du greifst vorsichtig in das Loch, es ist kalt und nass, es fühlt sich alienhaft an. Du spürst einen harten gegenstand. Mit etwas kraft ziehst du ihn aus dem Loch. Der Fernseher erlischt.")    
+                nPrint("Du greifst vorsichtig in das Loch, es ist kalt und nass, es fühlt sich alienhaft an. Du spürst einen harten Gegenstand. Mit etwas Kraft ziehst du ihn aus dem Loch. Der Fernseher erlischt.")
+                nPrint("Du hast keine Ahung was das für ein Gegenstand ist, vielleicht wird er in Zukunft nützlich sein.")  
             if choice == "nein":
-                print(f"Du schaust das Loch ängstlich an, greifst nicht rein und beobachtest weiter deinen Schulkameraden im Fernseher... er ist wütend. Er sagt: {name} du arsch, du verfickter hurensohn. Ich töte dich wenn ich dich in finger kriege. DU BASTARD!! - Er ist komplett außer sich und wirbelt herum, dabei siehst du wie sich seine fessel leicht lösen. Der Fernseher erlischt")
-            print("Du drehst dich um und siehst eine Tür, einen Schrank und ein Fenster.")
+                nPrint(f"Du schaust das Loch ängstlich an, greifst nicht rein und beobachtest weiter deinen Schulkameraden im Fernseher... er ist wütend. Er sagt: {name} du arsch, du verfickter hurensohn. Ich töte dich wenn ich dich in Finger kriege. DU BASTARD!! ") 
+                nPrint("(Du siehst zu wie er sich windet und flent. Seine Fesseln lösen sich leicht. Der Fernseher erlischt abrupt.")
+            nPrint("Du schaust zum Loch von dem du gekommen bist. Es ist viel zu klein um zurück zu gehen.")
+            nPrint("Du schaust dich weiter im Raum um und siehst eine Tür, einen Schrank und ein Fenster.")
             firstTimeDoor = True
             firstTimeWindow = True
             firstTimeCloset = True
             hasKey = False
             while True:
-                print("Du bist in der Mitte des Raumes. Wo möchtest du hingehen?")
+                nPrint("Du bist in der Mitte des Raumes. Wo möchtest du hingehen?")
                 choice = input("Tür, Schrank, Fenster?").lower()
                 if choice == "tür":
                     if firstTimeDoor:
-                        print("Du begibst dich zur Tür.")
-                        print("Sie hat einen Spion.")
-                        print("Möchtest du durch den Spion schauen?")
-                        choice = input("Ja oder nein?").lower()
-                        if choice == "ja":
-                            print("Du streckst dich nach vorne und blickst dehutsam durch den Spion.")
-                            print("Du blickst hindurch und siehst eine Wand. Die Wand ist vollgeschmiert mit Blut.")
-                            print("Dein Blick bleibt auf das Blut gerichtet, du erkennst eine Ziffer.")
-                            print("""
-    ░▒▓████████▓▒░ 
-    ░▒▓█▓▒░        
-    ░▒▓█▓▒░        
-    ░▒▓███████▓▒░  
-        ░▒▓█▓▒░ 
-        ░▒▓█▓▒░ 
-    ░▒▓███████▓▒░  
-    """)
-                            print("Du begibst dich zurück in die Mitte des Raumes.")
-                            firstTimeDoor = False           
+                        nPrint("Du begibst dich zur Tür.")
+                        nPrint("Sie hat einen Spion.")
+                        lookThroughSpy()    
+                        firstTimeDoor = False   
+                    else: 
+                        lookThroughSpy()
+                    nPrint("Du siehst einen griff an der Tür.")
+                    nPrint("Möchtest du versuchen die Tür zu öffnen?")
+                    choice = input("Ja | Nein?").lower()
+                    if choice == "ja":
+                        if hasKey:
+                            return
+                        else: 
+                            nPrint("Die Tür ist verschlossen.")
+                            nPrint("(Ich muss irgend wo einen Schlüssel finden)")
+                    elif choice == "nein": 
+                        nPrint("Du begibst dich zur Mitte des Raumes.")
                     else:
-                        print("Du erkennst einen griff an der Tür.")
-                        print("Möchtest du die Tür öffnen?")
-                        choice = input("Ja oder nein?").lower()
-                        if choice == "ja":
-                            if hasKey:
-                                return
-                        elif choice == "nein": 
-                            print("Du begibst dich zur Mitte des Raumes.")
-                        else:
-                            print("Du bist verwirrt und gehst zurück in die Mitte des Raumes.")
-            
+                        nPrint("Du bist verwirrt und gehst zurück in die Mitte des Raumes.")
+                
                 elif choice == "schrank":
                     if firstTimeCloset:
-                        print("Du gehst zum Schrank.")
-                        print("(Du hörst geräusche im Schrank)")
-                        print("Öffnen?")
-                        choice = input("ja oder nein?")
+                        nPrint("Du gehst zum Schrank.")
+                        nPrint("(Du hörst geräusche im Schrank)")
+                        nPrint("Öffnen?")
+                        choice = input("Ja oder Nein?").lower()
                         if choice == "ja":
-                            print("Du öffnest vorsichtig den Schrank und ....")
-                            print("... eine Ratte schwirrt davon und fällt in das Nadel AIDS Loch.")
-                            print("(Dumme Viecher)")
-                            print("Es liegt viel gerümpel in den Fächern, du räumst ein wenig bei seite und siehst im Holz eine Ziffer eingraviert:")
-                            print("""
-. 
-/| 
-| 
-| 
-_|_
-""")
-                            print("(Ok)")
-                            print("Im untersten Fach erkennst du einen Safe mit digitalem Code Eingabefeld.")
-                            print("Code eingeben?")
-                            choice = input("Ja oder nein?")
-                            if choice == "ja":
-                                while True: 
-                                    user_code = int(input("Bitte eine 3-stellige Zahl eingeben!"))
-                                    if user_code == 571:
-                                        print("Der Safe öffnet sich und in ihm liegt ein Schlüssel.")
-                                        print("Du hast den Schlüssel an dich genommen.")
-                                        print("Du gehst zurück in die Mitte des Raumes.")
-                                        hasKey = True
-                                        break
-                                    else:
-                                        print("Leider Falsch!")
-                                        print("Erneut versuchen?")
-                                        choice = input("ja oder nein?")
-                                        if choice == "ja":
-                                            continue
-                                        else:
-                                            break
-
+                            openCloset(firstTimeCloset)
+                            goToCodeDisplay()
                             firstTimeCloset = False
-                        else:
-                            print("Du gehst zurück zur Mitte des Raumes.")
                     else:
-                        print("Du öffnest den Schrank und blickst auf die Ziffer")
-                        print("""
-. 
-/| 
-| 
-| 
-_|_
-""")
-                        print("Im untersten Fach erkennst du einen Safe mit digitalem Code Eingabefeld.")
-                        print("Code eingeben?")
-                        choice = input("Ja oder nein?").lower()
-                        if choice == "ja":
-                            while True: 
-                                user_code = int(input("Bitte eine 3-stellige Zahl eingeben!"))
-                                if user_code == 571:
-                                    print("Der Safe öffnet sich und in ihm liegt ein Schlüssel.")
-                                    print("Du hast den Schlüssel an dich genommen.")
-                                    print("Du gehst zurück in die Mitte des Raumes.")
-                                    hasKey = True
-                                    break
-                                else:
-                                    print("Leider Falsch!")
-                                    print("Erneut versuchen?")
-                                    choice = input("ja oder nein?")
-                                    if choice == "ja":
-                                        continue
-                                    else:
-                                        break
-                        else: 
-                            print("Du begibst dich zurück in die Mitte des Raumes.")
+                        openCloset(firstTimeCloset)
+                        goToCodeDisplay()
+                    nPrint("Du gehst zurück zur Mitte des Raumes.")
                 elif choice == "fenster":
                     if firstTimeWindow:
-                        print("Du begibst dich zum Fenster und schaust raus.")
-                        print("Zwei Männer heben eine Frau aus dem Koffereaum eines Autos, sie ist leblos und blutverschmiert. Sie bringen sie zum Zaun am des Geländes und werfen sie über den Zaun. Sie fällt 30 m in die tiefe. Ihr extremitäten liegen in unnatürlichen Winkeln an ihrem Körper. Ihr Kleid ist am Rücken aufgerissen.")
-                        print("(Du erkennst ein Brandmal)")
-                        print("""
-____   
-F __ J  
-J '--' L 
-J`---. | 
-`---J J 
-    J__L
-    J__|
-        
-""")
+                        nPrint("Du begibst dich zum Fenster und schaust raus.")
+                        nPrint("Zwei Männer heben eine Frau aus dem Koffereaum eines Autos, sie ist leblos und blutverschmiert. Sie bringen sie zum Zaun am des Geländes und werfen sie über den Zaun. Sie fällt 30 m in die tiefe. Ihr extremitäten liegen in unnatürlichen Winkeln an ihrem Körper. Ihr Kleid ist am Rücken aufgerissen.")
+                        showBurnmark()
                         firstTimeWindow = False
                     else:
-                        print("Du blickst aus dem Fenster, siehst die verdeht Frau auf dem Bauch liegen.")
-                        print("(Du erkennst das Brandmal)")
-                        print("""
-____   
-F __ J  
-J '--' L 
-J`---. | 
-`---J J 
-    J__L
-    J__|
-        
-""")
-                        print("Du gehst zurück zur Mitte des Raumes.")
+                        nPrint("Du blickst aus dem Fenster, siehst wie die komplett verdehte Frau auf dem Bauch liegt.")
+                        showBurnmark()
+                    nPrint("Du gehst zurück zur Mitte des Raumes.")
                 else:
                     gameover = 1
                     break        
 
 def flur():
-    print("DU gehst durch die schwere Eisentür durch einen Korridor , irgendwas ist Komisch, Es gibt keine Türen. \nDie Tür hinter dir schliesst sich mit einem lauten knall")
-    print("als du dich wieder umdrehst , ist eine andere Tür erschienen , die sich langsam öffnet.\nIm nächsten Raum, befindet sich ein kleines Mädchen mit einem sack über dem Kopf, leichte wunden und schwellungen am ganzen körper und gefässelt mit einer eisenkette am boden.")
-    print("Du hörst das bitterliche schluchzen des Mädchens. Als sie dich bemerkt wie du ihr näher kommst fängt sie an zu zittern. BITTE BITTE tu mir nichts, weinte das mädchen.\nNeben ihr liegt ein Stumpfes Messer und  ein Zettel wo drauf steht:")
-    print("Das Mädchen was du vor dir siehst, mobbt ihre Mitschüler in der Grundschule und klaut deren Geld und essen, aber das ist doch normal für Kinder in ihrem alter oder... ?\nverschohnst du das mädchen , werden die Kinder die sie beklaut hat sterben, Tötest du sie bleiben die anderen am leben, Wie entscheidest du dich ?")
-    print("töten oder in ruhe lassen?: ")
+    nPrint("Du gehst durch die schwere Eisentür durch einen Korridor, irgendwas ist komisch. Es gibt keine Türen.\nDie Tür hinter dir schließt sich mit einem lauten knall.")
+    nPrint("Als du dich wieder umdrehst, ist eine andere Tür erschienen, die sich langsam öffnet.\nIm nächsten Raum befindet sich ein kleines Mädchen mit einem Sack über dem Kopf. Es sind leichte Wunden und Schwellungen am ganzen Körper zu sehen. Sie ist am Boden mit einer Eisenkette gefässelt.")
+    nPrint("Du hörst das bitterliche Schluchzen des Mädchens. Als sie dich bemerkt wie du ihr näher kommst, fängt sie an zu zittern.")
+    nPrint("'BITTE BITTE tu mir nichts..' weint das Mädchen.")
+    nPrint("Neben ihr liegt ein stumpfes Messer und ein Zettel wo drauf steht:")
+    nPrint("'Das Mädchen, was du vor dir siehst, mobbt ihre Mitschüler in der Grundschule und klaut ihnen Geld und essen. Aber das ist doch normal für Kinder in ihrem alter oder... ?\nVerschohnst du das Mädchen, werden die Kinder, welche sie beklaut hat, sterben.\nTötest du sie, bleiben die anderen am leben.\nWie entscheidest du dich?'")
     while True:
-        choice = input("")
+        choice = input("'Töten' oder 'in ruhe lassen'? ").lower()
         if choice == "in ruhe lassen":
-            print("eine versteckte wand öfffnet sich mit einem Bildschirm drinnen. Der bildschirm flackerte mit white noice bis auf einmal der bildschirm zu einer Liveübertragung wechselt.\nin der liveübertragung siehst du 5 Kinder in einem Spielzimmer spielen. es sieht eiegtnlich alles normal aus.Die Kamera wechelt zu einer tür.")
-            print("Als die tür sich öffnet kammen Männer in Seuchenschutzanzügen in das Spielzimmer maschiert, und richteten die Waffen gegen die kinder...alles was du nur noch siehst und hörst sind die schüsse und das aufhellen der schussexplosionen....Der Bildschirm wird schwarz...")
+            nPrint("Eine versteckte Wand öffnet sich mit einem Bildschirm drinnen. Der Bildschirm flackerte mit white noise bis auf einmal der Bildschirm zu einer Liveübertragung wechselt.\nIn der Liveübertragung siehst du 5 Kinder in einem Spielzimmer spielen.\nEs sieht eigentlich alles normal aus. Die Kamera wechelt zu einer Tür.")
+            nPrint("Als die Tür sich öffnet kammen Männer in Seuchenschutzanzügen in das Spielzimmer maschiert und richteten die Waffen auf die Kinder... alles was du noch siehst und hörst sind die Schüsse und das aufhellen der Schussexplosionen...\nDer Bildschirm wird schwarz...")
             break
         elif choice == "töten":
-            print("Du nimmst das Messer, deine hand fängt an zu schwitzen und du chaust dir das Mädchen an...\nDu fängst an deine hand zu heben und mit deiner ganzen kraft rammst du das Messer in die Brust des Mädchens .\n Sie schreit und fehlt dich an damit aufzuhören, aber dein einziger gedanke war das du hier nur noch raus willst. Du versuchst das Messer aus ihr raus zu ziehen aber es steckte fest zwischen ihren rippen. Das Rostige stumpfe Messer ging nur mit mühen raus. Du hast das Herz des Mädchens leicht verfehlt wodurch sie nicht direkt getötet worden ist. Sie weinte bitterlich voller schmerzen. Du musst es nochmal in ihr reinrammen...\nDeine gedanken spielen verrückt, dir kommen die Tränen und du fänsgt fast das kotzen an. Dieses mal rammst du es direkt in ihre halsschlagader mit ganz viel drück hast du es gschafft durch hier hals zu schneiden...")
-            print("Sie ist tot...")
+            nPrint("Du nimmst das Messer.\nDeine Hand fängt an zu schwitzen und du schaust dir das Mädchen an...\nDu fängst an deine Hand zu heben und mit deiner ganzen Kraft rammst du das Messer in die Brust des Mädchens.\n Sie schreit und fleht dich an damit aufzuhören aber dein einziger gedanke ist, dass du hier nur raus willst. Du versuchst das Messer aus ihr raus zu ziehen aber es steckt fest zwischen ihren Rippen. Das rostige stumpfe Messer geht nur mit Gewalt raus.")
+            nPrint("Du hast das Herz des Mädchens leicht verfehlt wodurch sie nicht direkt stirbt. Sie weint bitterlich vor Schmerzen. Du musst es nochmal in sie reinrammen\nDeine gedanken spielen verrückt, dir kommen die Tränen und du fängst fast das kotzen an. Dieses mal rammst du es direkt in ihre Halsschlagader. Mit ganz viel Druck hast du es geschafft ihr durch den Hals zu schneiden...")
+            nPrint("Sie ist tot...")
             break
         else:
-            print("bitte Wählen: Töten oder in ruhe lassen.")
+            nPrint("Bitte Wählen: 'Töten' oder 'in ruhe lassen'.")
     if choice == "in ruhe lassen":
-        print("Eine verdeckte tür ging auf aber als du hindurchgehen wolltest hörst du ein klicken...Die Ketten des angeketteten Mädchens werden unter starkstrom gesetzt weshalb sie augenblicklich stirbt. Der Anblick wie der Sack in flammen aufgeht und das Herzzereisende schreien des Mädchens lösen in dir eine unglaubliche Trauer aus aber dein einziger Gedanke ist...Du musst entkommen")
+        nPrint("Eine verdeckte Tür geht auf aber als du hindurchgehen willst hörst du ein klicken...Die Ketten des angeketteten Mädchens werden unter Starkstrom gesetzt weshalb sie augenblicklich stirbt. Der Anblick wie der Sack in flammen aufgeht und das Herzzereißende schreien des Mädchens lösen in dir eine unglaubliche Trauer aus aber dein einziger Gedanke ist...Du musst entkommen")
     elif choice == "töten":
-        print("Eine verdeckte tür ging auf und du konntest hindurchgehen...raus aus dem Horror...")
+        nPrint("Eine verdeckte Tür ging auf und du konntest hindurchgehen...raus aus dem Horror...")
 
 
+def lookThroughSpy() -> bool:
+    nPrint("Möchtest du durch den Spion schauen?")
+    choice = input("Ja oder nein?").lower()
+    if choice == "ja":
+        nPrint("Du streckst dich nach vorne und blickst dehutsam durch den Spion.")
+        nPrint("Du blickst hindurch und siehst eine Wand. Die Wand ist vollgeschmiert mit Blut.")
+        nPrint("Dein Blick bleibt auf das Blut gerichtet, du erkennst eine Ziffer.")
+        print("""
+    ░▒▓████████▓▒░ 
+    ░▒▓█▓▒░        
+    ░▒▓█▓▒░        
+    ░▒▓███████▓▒░  
+          ░▒▓█▓▒░ 
+          ░▒▓█▓▒░ 
+    ░▒▓███████▓▒░  
+    """)
 
-def check_input():
+
+def openCloset(firstTime):
+    if firstTime:
+        nPrint("Du öffnest vorsichtig den Schrank und ....")
+        nPrint("... eine Ratte schwirrt davon und fällt in das Nadel AIDS Loch.")
+        nPrint("(Dumme Viecher)")
+        nPrint("Es liegt viel gerümpel in den Fächern, du räumst ein wenig bei seite und siehst im Holz eine Ziffer eingraviert:")
+        print("""
+     . 
+    /| 
+     | 
+     | 
+    _|_
+    """)
+        nPrint("(Ok)")
+    else:
+        nPrint("Du öffnest den Schrank und blickst auf die Ziffer")
+        print("""
+     . 
+    /| 
+     | 
+     | 
+    _|_
+""")
+
+def goToCodeDisplay():
+    nPrint("Im untersten Fach erkennst du einen Safe mit digitalem Code Eingabefeld.")
+    nPrint("Code eingeben?")
+    choice = input("Ja oder nein?")
+    if choice == "ja":
+        while True: 
+            user_code = int(input("Bitte eine 3-stellige Zahl eingeben!"))
+            if user_code == 591:
+                nPrint("Der Safe öffnet sich und in ihm liegt ein Schlüssel.")
+                nPrint("Du hast den Schlüssel an dich genommen.")
+                nPrint("Du gehst zurück in die Mitte des Raumes.")
+                hasKey = True
+                break
+            else:
+                nPrint("Leider Falsch!")
+                nPrint("Erneut versuchen?")
+                choice = input("ja oder nein?")
+                if choice == "ja":
+                    continue
+                else:
+                    break
+
+
+def showBurnmark():
+    sPrint("(Du erkennst ein Brandmal)")
+    print("""
+   ____   
+F  __  J  
+J '--' L 
+J`---. | 
+`---J  J 
+    J__L
+    J__|
+        
+""")
+
+def key_listener():
     global stop_typing
-    keyboard.wait('space')  # wartet auf Leertaste
-    stop_typing = True
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setcbreak(fd)
+        while True:
+            dr, _, _ = select.select([sys.stdin], [], [], 0)
+            if dr:
+                ch = sys.stdin.read(1)
+                if ch in [' ', '\n']:  # Leertaste oder Enter
+                    stop_typing = True
+                    break
+            time.sleep(0.05)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
 def sPrint(text):
     global stop_typing
     stop_typing = False
 
-    # Starte Thread, der auf Leertaste oder Enter wartet
-    t = threading.Thread(target=lambda: (keyboard.wait('space') or keyboard.wait('enter')))
-    t.daemon = True
-    t.start()
+    threading.Thread(target=key_listener, daemon=True).start()
+    time.sleep(1)
 
-    sleep(1)
-    for char in text:
-        if stop_typing or keyboard.is_pressed('space') or keyboard.is_pressed('enter'):
-            # Sofort alles anzeigen
-            sys.stdout.write(text[text.index(char):])
+    for i, char in enumerate(text):
+        if stop_typing:
+            sys.stdout.write(text[i:])
             sys.stdout.flush()
             break
-        sleep(0.1)
         sys.stdout.write(char)
         sys.stdout.flush()
+        time.sleep(0.1)
     print("")
 
 def nPrint(text):
     global stop_typing
     stop_typing = False
 
-    t = threading.Thread(target=lambda: (keyboard.wait('space') or keyboard.wait('enter')))
-    t.daemon = True
-    t.start()
+    threading.Thread(target=key_listener, daemon=True).start()
 
-    for char in text:
-        if stop_typing or keyboard.is_pressed('space') or keyboard.is_pressed('enter'):
-            sys.stdout.write(text[text.index(char):])
+    for i, char in enumerate(text):
+        if stop_typing:
+            sys.stdout.write(text[i:])
             sys.stdout.flush()
             break
-        sleep(0.1)
         sys.stdout.write(char)
         sys.stdout.flush()
+        time.sleep(0.1)
     print("")
-
 
 game()
 if not gameover:
